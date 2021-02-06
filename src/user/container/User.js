@@ -19,6 +19,8 @@ export default function User({ match }) {
         dispatch(actions.fetchUser(name))
     }, [name])
 
+    const isFetched = true;
+
     return (
         <Row justify="center">
             <Col xs={24} md={20} lg={14}>
@@ -37,6 +39,9 @@ export default function User({ match }) {
                             <Descriptions.Item label="태그">{user.tag}</Descriptions.Item>
                             <Descriptions.Item label="수정 내역">수정 내역</Descriptions.Item>
                         </Descriptions>
+                    )}
+                    {!user && isFetched && (
+                        <Typography.Text>존재하지 않는 사용자입니다.</Typography.Text>
                     )}
                 </PageHeader>
             </Col>
