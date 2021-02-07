@@ -52,6 +52,7 @@ export function makeFetchSaga({
         iter = value.payload.fn(...value.payload.args);
         continue;
       }
+      // API 호출할 때의 상태 처리
       if (getIsCallEffect(value) && value.payload.fn === callApi) {
         yield put(
           actions.setFetchStatus({
