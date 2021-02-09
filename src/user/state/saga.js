@@ -1,4 +1,4 @@
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, call, put, takeEvery, takeLeading } from "redux-saga/effects";
 import { actions, Types } from "./index";
 import { callApi } from "../../common/util/api";
 import { deleteApiCache, makeFetchSaga } from "../../common/util/fetch";
@@ -28,8 +28,19 @@ function* fetchUpdateUser({ user, key, value }) {
     if(isSuccess && data) {
         // autoComplete의 캐시를 지워줘야 함
         deleteApiCache();
+        yield put(actions.addHistory(data.history));
     } else {
         yield put(actions.setValue('user', user));
+    }
+}
+
+function* fetchUserHistory({ name }) {
+    const { isSuccess, data } = yield call(callApi, {
+        url: '/history',
+        params: { name }
+    });
+    if(isSuccess && data) {
+        yield put(actions.setValue('userHistory', data));
     }
 }
 
@@ -40,9 +51,13 @@ export default function* () {
             // 사가 미들웨어 <-> makeFetchSage <-> 사가 함수 흐름
             makeFetchSaga({ fetchSaga: fetchUser, canCache: true }),
         ),
-        takeEvery(
+        takeLeading(
             Types.FetchUpdateUser,
             makeFetchSaga({ fetchSaga: fetchUpdateUser, canCache: false }),
-        )
+        ),
+        takeLeading(
+            Types.FetchUserHistory,
+            makeFetchSaga({ fetchSaga: fetchUserHistory, canCache: false }),
+        ),
     ])
 }

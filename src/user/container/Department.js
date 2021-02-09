@@ -11,7 +11,7 @@ export default function Department() {
 
   function onSaveDepartment() {
       if(tempDepartment) {
-          dispatch(actions.FetchUpdateUser({
+          dispatch(actions.fetchUpdateUser({
               user, 
               key: 'department', 
               value: tempDepartment, 

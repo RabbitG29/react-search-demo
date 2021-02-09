@@ -9,25 +9,33 @@ export const Types = {
     SetValue: 'search/SetValue',
     FetchUser: 'user/FetchUser',
     FetchUpdateUser: 'user/FetchUpdateUser',
+    FetchUserHistory: 'user/FetchUserHistory',
+    AddHistory: 'user/AddHistory',
 };
 
 export const actions = {
     setValue: createSetValueAction(Types.SetValue),
     fetchUser: name => ({ type: Types.FetchUser, name }),
-    FetchUpdateUser: ({ user, key, value, fetchKey }) => ({
+    fetchUpdateUser: ({ user, key, value, fetchKey }) => ({
         type: Types.FetchUpdateUser,
         user,
         key,
         value,
         [FETCH_KEY]: fetchKey,
     }),
+    fetchUserHistory: name => ({ type: Types.FetchUserHistory, name }),
+    addHistory: history => ({ type: Types.AddHistory, history })
 };
 
 // 상태 값 관리
 const INITIAL_STATE = {
     user: undefined,
+    userHistory: [],
 };
 const reducer = createReducer(INITIAL_STATE, {
     [Types.SetValue]: setValueReducer,
+    [Types.AddHistory]: (state, action) => (
+        state.userHistory = [action.history, ...state.userHistory]
+    )
 });
 export default reducer;
