@@ -5,18 +5,25 @@ import SearchInput from './SearchInput';
 import History from '../../common/component/History'
 import { useDispatch, useSelector } from 'react-redux';
 import { actions } from '../state'
+import { actions as authActions } from '../../auth/state'
+import useNeedLogin from '../../common/hook/useNeedLogin';
 
 export default function Search() {
+    useNeedLogin()
     const history = useSelector(state => state.search.history);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(actions.fetchAllHistory());
     }, [dispatch])
+    
+    function logout() {
+        dispatch(authActions.fetchLogout())
+    }
 
     return (
         <>
             <Row justify="end" style={{padding: 20}}>
-                <Col><Settings logout={() => {}} /></Col>
+                <Col><Settings logout={logout} /></Col>
             </Row>
             <Row justify="center" style={{marginTop: 100}}>
                 <Col>
